@@ -8,6 +8,7 @@ const formatTime = (seconds) => {
 };
 
 const Header = ({ gameTime, isGameActive, onStartStop, onOpenConfig, onStartGame, onEndGame, gameState }) => {
+  console.log(gameTime);
   return (
     <header className="bg-white shadow-md p-4">
       <div className="container mx-auto flex items-center justify-between">

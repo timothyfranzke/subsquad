@@ -7,10 +7,13 @@ const formatTime = (seconds) => {
   return `${minutes}:${remainingSeconds.toString().padStart(2, '0')}`;
 };
 
-const SubHistoryMatrix = ({ swapHistory, roster, activePlayers, sectionSwaps = {}, totalActiveTimes }) => {
+const SubHistoryMatrix = ({ swapHistory, roster, activePlayers, sectionSwaps = {}, totalActiveTimes, sectionTimes = [] }) => {
   if (swapHistory.length === 0) return null;
 
-  const sections = swapHistory.map((swap, index) => `Section ${index + 1}`);
+  const sections = swapHistory.map((swap, index) => ({
+    name: `Section ${index + 1}`,
+    time: formatTime(sectionTimes[index] || 0)
+  }));
 
   const getActivityIcon = (playerId, sectionIndex) => {
     const section = swapHistory[sectionIndex];
@@ -52,7 +55,14 @@ const SubHistoryMatrix = ({ swapHistory, roster, activePlayers, sectionSwaps = {
           <tr>
             <th className="p-3 text-left">Player</th>
             {sections.map((section, index) => (
-              <th key={index} className="p-3 text-center">{section}</th>
+              <th key={index} className="p-3 text-center">
+                <div className="flex flex-col items-center">
+                  <span className="font-bold">{section.name}</span>
+                  <span className="text-xs font-normal opacity-90">
+                    {section.time}
+                  </span>
+                </div>
+              </th>
             ))}
             <th className="p-3 text-center">Current Status</th>
           </tr>
