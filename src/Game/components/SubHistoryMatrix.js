@@ -11,7 +11,7 @@ const SubHistoryMatrix = ({ swapHistory, roster, activePlayers, sectionSwaps = {
   if (swapHistory.length === 0) return null;
 
   const sections = swapHistory.map((swap, index) => ({
-    name: `Section ${index + 1}`,
+    name: `Period ${index + 1}`,
     time: formatTime(sectionTimes[index] || 0)
   }));
 

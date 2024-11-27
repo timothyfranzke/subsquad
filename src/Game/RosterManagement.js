@@ -22,8 +22,13 @@ import {
   arrayUnion,
   arrayRemove,
 } from "firebase/firestore";
+import { useNavigate } from "react-router-dom";
+import Logo from "../components/Logo";
+import Modal from 'react-modal'; // Ensure you have react-modal installed
+
 
 const RosterManagement = ({ onRosterSelect }) => {
+  const navigate = useNavigate();
   const [rosters, setRosters] = useState([]);
   const [currentRoster, setCurrentRoster] = useState({
     name: "",
@@ -40,6 +45,7 @@ const RosterManagement = ({ onRosterSelect }) => {
   const [shareEmail, setShareEmail] = useState("");
   const [selectedRoster, setSelectedRoster] = useState(null);
   const [userEmail, setUserEmail] = useState(null);
+  const [isModalOpen, setIsModalOpen] = useState(false);
 
   useEffect(() => {
     const unsubscribe = auth.onAuthStateChanged((user) => {
@@ -201,6 +207,22 @@ const RosterManagement = ({ onRosterSelect }) => {
       console.error("Error saving roster:", err);
     }
   };
+  const openModal = (roster) => {
+    setSelectedRoster(roster);
+    setIsModalOpen(true);
+  };
+
+  const closeModal = () => {
+    setIsModalOpen(false);
+    setSelectedRoster(null);
+  };
+
+  const confirmDelete = () => {
+    if (selectedRoster) {
+        handleDeleteRoster(selectedRoster.id);
+    }
+    closeModal();
+  };
 
   const handleDeleteRoster = async (rosterId) => {
     try {
@@ -299,10 +321,7 @@ const RosterManagement = ({ onRosterSelect }) => {
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
           <div className="flex items-center space-x-2">
-            <Users size={32} className="text-blue-600" />
-            <h1 className="text-2xl font-bold text-gray-800">
-              Roster Management
-            </h1>
+            <Logo />
           </div>
           {!isCreating && (
             <button
@@ -379,7 +398,7 @@ const RosterManagement = ({ onRosterSelect }) => {
               </div>
 
               <div className="grid grid-cols-1 md:grid-cols-2 gap-2">
-                {currentRoster.players.map(player => (
+                {currentRoster.players.map((player) => (
                   <div
                     key={player.id}
                     className="flex items-center justify-between p-2 bg-gray-50 rounded-md"
@@ -399,8 +418,8 @@ const RosterManagement = ({ onRosterSelect }) => {
                 <button
                   onClick={() => {
                     setIsCreating(false);
-                    setCurrentRoster({ name: '', players: [] });
-                    setError('');
+                    setCurrentRoster({ name: "", players: [] });
+                    setError("");
                   }}
                   className="px-4 py-2 bg-gray-300 text-gray-700 rounded-md hover:bg-gray-400"
                 >
@@ -447,7 +466,7 @@ const RosterManagement = ({ onRosterSelect }) => {
                           <Share2 size={18} />
                         </button>
                         <button
-                          onClick={() => handleDeleteRoster(roster.id)}
+                          onClick={() => openModal(roster)}
                           className="text-red-500 hover:text-red-600"
                         >
                           <Trash2 size={18} />
@@ -471,14 +490,6 @@ const RosterManagement = ({ onRosterSelect }) => {
                         </span>
                       ))}
                     </div>
-                    {roster.canEdit && (
-                      <button
-                        onClick={() => handleTogglePublic(roster)}
-                        className="mt-2 w-full px-4 py-2 bg-gray-500 text-white rounded-md hover:bg-gray-600 flex items-center justify-center"
-                      >
-                        {roster.isPublic ? "Make Private" : "Make Public"}
-                      </button>
-                    )}
                     <button
                       onClick={() => onRosterSelect(roster)}
                       className="mt-2 w-full px-4 py-2 bg-green-500 text-white rounded-md hover:bg-green-600 flex items-center justify-center"
@@ -487,6 +498,30 @@ const RosterManagement = ({ onRosterSelect }) => {
                       Select Roster
                     </button>
                   </div>
+                  <Modal
+                    isOpen={isModalOpen}
+                    onRequestClose={closeModal}
+                    contentLabel="Confirm Delete"
+                    className="modal"
+                    overlayClassName="modal-overlay"
+                  >
+                    <h2 className="text-xl font-semibold">Confirm Delete</h2>
+                    <p>Are you sure you want to delete this roster?</p>
+                    <div className="flex justify-end space-x-4 mt-4">
+                      <button
+                        onClick={closeModal}
+                        className="px-4 py-2 bg-gray-300 rounded-md hover:bg-gray-400"
+                      >
+                        Cancel
+                      </button>
+                      <button
+                        onClick={confirmDelete}
+                        className="px-4 py-2 bg-red-500 text-white rounded-md hover:bg-red-600"
+                      >
+                        Delete
+                      </button>
+                    </div>
+                  </Modal>
                 </div>
               </div>
             ))}
@@ -557,40 +592,7 @@ const RosterManagement = ({ onRosterSelect }) => {
                             {selectedRoster.ownerId ===
                               auth.currentUser?.uid && (
                               <button
-                                onClick={async () => {
-                                  try {
-                                    const rosterRef = doc(
-                                      db,
-                                      "rosters",
-                                      selectedRoster.id
-                                    );
-                                    await updateDoc(rosterRef, {
-                                      access: arrayRemove(share.email),
-                                      sharedWith: arrayRemove(share),
-                                    });
-                                    setRosters((prev) =>
-                                      prev.map((r) =>
-                                        r.id === selectedRoster.id
-                                          ? {
-                                              ...r,
-                                              access: r.access.filter(
-                                                (email) => email !== share.email
-                                              ),
-                                              sharedWith: r.sharedWith.filter(
-                                                (s) => s.email !== share.email
-                                              ),
-                                            }
-                                          : r
-                                      )
-                                    );
-                                  } catch (err) {
-                                    setError("Failed to remove access");
-                                    console.error(
-                                      "Error removing access:",
-                                      err
-                                    );
-                                  }
-                                }}
+                              onClick={() => openModal(selectedRoster)}
                                 className="text-red-500 hover:text-red-600 p-1"
                               >
                                 <Trash2 size={16} />

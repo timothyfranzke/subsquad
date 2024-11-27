@@ -13,6 +13,7 @@ import Game from "./Game/Game";
 import { useState, useEffect } from "react";
 import RosterManagement from "./Game/RosterManagement";
 import GamesList from "./Game/GameList";
+import MarketingPage from "./components/Marketing";
 
 const PrivateRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -53,6 +54,7 @@ const App = () => {
   return (
     <BrowserRouter>
       <Routes>
+        <Route path="/" element={<MarketingPage />} />
         <Route path="/login" element={<Login />} />
         <Route path="/roster" element={<PrivateRoute><RosterManagementWrapper /></PrivateRoute>} />
         <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
