@@ -47,7 +47,7 @@ const FeedbackForm = ({ onClose }) => {
       <>
         <div className="md:hidden fixed inset-0 bg-black/50 z-40" />
         <div className="fixed z-50 bg-white shadow-lg md:max-w-md w-full 
-          md:bottom-4 md:right-4 md:rounded-lg
+          md:bottom-24 md:right-4 md:rounded-lg
           bottom-0 left-0 right-0 rounded-t-lg p-6">
           <div className="text-center">
             <div className="w-12 h-12 rounded-full bg-green-100 mx-auto mb-4 flex items-center justify-center">
@@ -65,7 +65,7 @@ const FeedbackForm = ({ onClose }) => {
     <>
       <div className="md:hidden fixed inset-0 bg-black/50 z-40" onClick={onClose} />
       <div className="fixed z-50 bg-white shadow-lg md:max-w-md w-full 
-        md:bottom-4 md:right-4 md:rounded-lg
+        md:bottom-24 md:left-4 md:rounded-lg
         bottom-0 left-0 right-0 rounded-t-lg">
         <div className="flex justify-between items-center p-4 md:p-6">
           <h3 className="text-lg font-semibold text-gray-900 flex items-center">
@@ -169,9 +169,10 @@ const BetaFeedback = () => {
       {!isOpen && (
         <button
           onClick={() => setIsOpen(true)}
-          className="fixed bottom-4 right-4 bg-blue-600 text-white p-4 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50"
+          className="fixed bottom-4 left-4 bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors z-50 flex items-center space-x-2"
         >
-          <MessageCircle size={24} />
+          <MessageCircle size={20} />
+          <span className="hidden md:inline text-sm">Feedback</span>
         </button>
       )}
       

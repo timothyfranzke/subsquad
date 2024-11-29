@@ -72,7 +72,7 @@ const App = () => {
     </BrowserRouter>
     
   );
-  <BetaFeedback />
+
 };
 
 export default App;
