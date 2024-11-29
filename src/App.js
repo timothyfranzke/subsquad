@@ -14,6 +14,7 @@ import { useState, useEffect } from "react";
 import RosterManagement from "./app/screens/RosterManagement";
 import GamesList from "./app/screens/GameList";
 import MarketingPage from "./marketing-site/Marketing";
+import BetaFeedback from "./components/BetaFeedback";
 
 const PrivateRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -69,7 +70,9 @@ const App = () => {
         <Route path="/" element={<Navigate to="/roster" />} />
       </Routes>
     </BrowserRouter>
+    
   );
+  <BetaFeedback />
 };
 
 export default App;

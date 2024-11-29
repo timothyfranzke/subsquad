@@ -25,6 +25,7 @@ import {
 import { useNavigate } from "react-router-dom";
 import Logo from "../../marketing-site/components/Logo";
 import Modal from 'react-modal'; // Ensure you have react-modal installed
+import BetaFeedback from "../../components/BetaFeedback";
 
 
 const RosterManagement = ({ onRosterSelect }) => {
@@ -651,6 +652,7 @@ const RosterManagement = ({ onRosterSelect }) => {
           </div>
         )}
       </div>
+      <BetaFeedback />
     </div>
   );
 };

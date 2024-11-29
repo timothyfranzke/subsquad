@@ -6,6 +6,7 @@ import ConfigurationEditor from "../components/ConfigEditor";
 import PlayerCard from "../components/PlayerCard";
 import Modal from "../components/Modal";
 import PlayerSwapModal from "../components/PlayerSwapModal";
+import BetaFeedback from "../../components/BetaFeedback";
 
 // Default game configuration remains the same...
 const DEFAULT_GAME_STATE = {
@@ -316,6 +317,7 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
           onSwap={handlePlayerSwap}
         />
       </div>
+      <BetaFeedback />
     </div>
   );
 };

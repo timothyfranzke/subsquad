@@ -15,6 +15,7 @@ import {
 import { db, auth } from '../../config/firebase';
 import { Users, PlayCircle, Clock, Calendar, Activity } from 'lucide-react';
 import Game from './Game';
+import BetaFeedback from '../../components/BetaFeedback';
 
 const GamesList = () => {
   const location = useLocation();
@@ -244,6 +245,7 @@ const GamesList = () => {
           </div>
         </div>
       </div>
+      <BetaFeedback />
     </div>
   );
 };
