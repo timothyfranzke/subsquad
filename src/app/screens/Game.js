@@ -150,7 +150,7 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
 
     const newHistory = [...game.swapHistory, selectedPlayers];
     const newSectionIndex = newHistory.length - 1;
-    const newSectionTimes = [...game.sectionTimes, game.gameTime];
+    const newSectionTimes = [...(game.sectionTimes ?? []), game.gameTime];
 
     updateGame({
       swapHistory: newHistory,

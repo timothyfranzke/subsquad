@@ -50,8 +50,8 @@ const PlayerCard = ({
     <div
       className={`rounded-lg p-2 shadow-md ${getStatusStyle()} ${
         isSelected ? "ring-2 ring-blue-500" : ""
-      } ${!isGameInProgress ? "opacity-50 cursor-not-allowed" : ""}`}
-      onClick={() => isGameInProgress && onSelect(player.id)}
+      } ${!isGameInProgress ? "" : ""}`}
+      onClick={() =>  onSelect(player.id)}
       draggable={isGameInProgress && !onCourt}
       onDragStart={(e) => isGameInProgress && onDragStart(e, player.id)}
       onDragOver={(e) => isGameInProgress && onDragOver(e)}

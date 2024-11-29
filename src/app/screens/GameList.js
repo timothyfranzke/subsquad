@@ -69,6 +69,7 @@ const GamesList = () => {
       const snapshot = await getDocs(gamesQuery);
       const gamesData = snapshot.docs.map(doc => {
         const data = doc.data();
+        console.log(data);
         return {
           id: doc.id,
           ...data,
