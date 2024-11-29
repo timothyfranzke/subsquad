@@ -8,12 +8,12 @@ import {
 } from "react-router-dom";
 import { onAuthStateChanged } from "firebase/auth";
 import { auth } from "./config/firebase";
-import Login from "./components/Login";
-import Game from "./Game/Game";
+import Login from "./marketing-site/components/Login";
+import Game from "./app/screens/Game";
 import { useState, useEffect } from "react";
-import RosterManagement from "./Game/RosterManagement";
-import GamesList from "./Game/GameList";
-import MarketingPage from "./components/Marketing";
+import RosterManagement from "./app/screens/RosterManagement";
+import GamesList from "./app/screens/GameList";
+import MarketingPage from "./marketing-site/Marketing";
 
 const PrivateRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
