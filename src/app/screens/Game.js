@@ -36,6 +36,9 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
   const [showSwapPreview, setShowSwapPreview] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
   const [isSwapModalOpen, setIsSwapModalOpen] = useState(false);
+  const [isQuickSwapOpen, setIsQuickSwapOpen] = useState(false);
+  const [activePlayerId, setActivePlayerId] = useState(null);
+  const [benchedPlayerId, setBenchedPlayerId] = useState(null);
 
   // Helper function to update game state and emit update
   const updateGame = (updates) => {
@@ -45,6 +48,27 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
       return newGame;
     });
   };
+
+  useEffect(() => {
+    const benchedPlayers = [];
+    const activePlayers = [];
+    game.roster.forEach((player) => {
+      if (selectedPlayers.includes(player.id)) {
+        if (game.activePlayers.includes(player.id)) {
+          activePlayers.push(player);
+        } else {
+          benchedPlayers.push(player);
+        }
+      }
+    });
+    if (benchedPlayers.length == 1 && activePlayers.length == 1) {
+      setIsQuickSwapOpen(true);
+      setActivePlayerId(activePlayers[0].id);
+      setBenchedPlayerId(benchedPlayers[0].id);
+    } else {
+      setIsQuickSwapOpen(false);
+    }
+  }, [selectedPlayers]);
 
   // Fixed timer effect
   useEffect(() => {
@@ -116,7 +140,7 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
     });
   };
 
-  const handlePlayerSwap = (activePlayerId, benchedPlayerId) => {
+  const handlePlayerSwap = () => {
     const newActivePlayers = game.activePlayers.map((id) =>
       id === activePlayerId ? benchedPlayerId : id
     );
@@ -133,6 +157,11 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
         },
       ],
     };
+    setActivePlayerId(null);
+    setBenchedPlayerId(null);
+    setIsQuickSwapOpen(false);
+    setShowSwapPreview(false);
+    setSelectedPlayers([]);
 
     updateGame({
       activePlayers: newActivePlayers,
@@ -266,7 +295,42 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
           sectionTimes={game.sectionTimes} // Add this line
         />
 
-        {showSwapPreview && (
+        {isQuickSwapOpen && (
+          <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-lg">
+            <h3 className="text-lg font-bold mb-2">Next Lineup Preview</h3>
+            <div className="flex flex-wrap gap-2 mb-4">
+              <div className="bg-green-100 px-2 py-1 rounded">
+                {game.roster.find((p) => p.id === activePlayerId)?.name} → Bench
+              </div>
+              <div className="bg-yellow-100 px-2 py-1 rounded">
+                {game.roster.find((p) => p.id === benchedPlayerId)?.name} →
+                Court
+              </div>
+            </div>
+            <div className="flex justify-end gap-2">
+              <button
+                onClick={() => {
+                  setSelectedPlayers([]);
+                  setActivePlayerId(null);
+                  setBenchedPlayerId(null);
+                  setIsQuickSwapOpen(false);
+                  setShowSwapPreview(false);
+                }}
+                className="px-4 py-2 bg-gray-300 text-gray-800 rounded hover:bg-gray-400"
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handlePlayerSwap}
+                className="px-4 py-2 bg-green-500 text-white rounded hover:bg-green-600"
+              >
+                Sub
+              </button>
+            </div>
+          </div>
+        )}
+
+        {showSwapPreview && !isQuickSwapOpen && (
           <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-lg">
             <h3 className="text-lg font-bold mb-2">Next Lineup Preview</h3>
             <div className="flex flex-wrap gap-2 mb-4">
