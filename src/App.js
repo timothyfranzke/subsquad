@@ -17,6 +17,7 @@ import MarketingPage from "./marketing-site/Marketing";
 import BetaFeedback from "./components/BetaFeedback";
 import AdminDashboard from "./admin/Admin";
 import { useAnalytics } from "./hooks/useAnlyticsHook";
+import AdminFeedback from "./admin/Feedback";
 
 const PrivateRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
@@ -117,6 +118,7 @@ const App = () => {
             </AdminRoute>
           }
         />
+        <Route path="/feedback" element={<AdminFeedback />} />
         <Route
           path="/game"
           element={

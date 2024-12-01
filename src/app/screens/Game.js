@@ -32,6 +32,7 @@ const DEFAULT_GAME_STATE = {
 
 const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
   const [game, setGame] = useState(initialGame);
+  const [error, setError] = useState(null);
   const [selectedPlayers, setSelectedPlayers] = useState([]);
   const [showSwapPreview, setShowSwapPreview] = useState(false);
   const [isConfigOpen, setIsConfigOpen] = useState(false);
@@ -125,12 +126,35 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
 
   // Rest of the component remains the same...
   const startGame = () => {
+    // First check if we have enough players in the roster
     if (game.roster.length < game.config.activePlayersLimit) return;
 
-    const initialActivePlayers = game.roster
-      .slice(0, game.config.activePlayersLimit)
-      .map((p) => p.id);
+    let initialActivePlayers;
 
+    // Check if we have selected players
+    if (selectedPlayers.length >= game.config.activePlayersLimit) {
+      // Use selected players if we have enough
+      initialActivePlayers = selectedPlayers.slice(
+        0,
+        game.config.activePlayersLimit
+      );
+    } else if (selectedPlayers.length > 0) {
+      // If we have some selected players but not enough, show error
+      setError(
+        `Please select ${game.config.activePlayersLimit} players to start the game`
+      );
+      return;
+    } else {
+      // If no players are selected, use the first n players from roster
+      initialActivePlayers = game.roster
+        .slice(0, game.config.activePlayersLimit)
+        .map((p) => p.id);
+    }
+
+    // Clear any existing error
+    setError("");
+
+    // Update game state
     updateGame({
       gameState: "in_progress",
       isGameActive: true,
@@ -138,6 +162,10 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
       swapHistory: [initialActivePlayers],
       sectionTimes: [0], // First section starts at 0
     });
+
+    // Clear selected players after starting
+    setSelectedPlayers([]);
+    setShowSwapPreview(false);
   };
 
   const handlePlayerSwap = () => {
@@ -297,7 +325,9 @@ const Game = ({ initialGame = DEFAULT_GAME_STATE, onGameUpdated }) => {
 
         {isQuickSwapOpen && (
           <div className="fixed inset-x-0 bottom-0 bg-white p-4 shadow-lg">
-            <h3 className="text-lg font-bold mb-2">Next Lineup Preview</h3>
+            <h3 className="text-lg font-bold mb-2">
+              Quick Substitution Preview
+            </h3>
             <div className="flex flex-wrap gap-2 mb-4">
               <div className="bg-green-100 px-2 py-1 rounded">
                 {game.roster.find((p) => p.id === activePlayerId)?.name} → Bench

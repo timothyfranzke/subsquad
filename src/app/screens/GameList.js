@@ -14,12 +14,21 @@ import {
   writeBatch,
 } from "firebase/firestore";
 import { db, auth } from "../../config/firebase";
-import { Users, PlayCircle, Clock, Calendar, Activity } from "lucide-react";
+import {
+  Users,
+  PlayCircle,
+  Clock,
+  Calendar,
+  Activity,
+  ChevronLast,
+  ChevronLeft,
+} from "lucide-react";
 import Game from "./Game";
 import BetaFeedback from "../../components/BetaFeedback";
 import GameStatus from "../components/GameStatus";
 import PlayerSelectionModal from "../components/PlayerSelectionModal";
 import ActiveGamesDialog from "../components/ActiveGameDialog";
+import EmptyState from "../components/EmotySet";
 
 const GamesList = () => {
   const location = useLocation();
@@ -243,24 +252,38 @@ const GamesList = () => {
     <div className="min-h-screen bg-gray-50 p-4">
       <div className="max-w-4xl mx-auto">
         <div className="flex items-center justify-between mb-6">
+          <div className="flex items-center space-x-4">
+            {/* Back to Rosters link */}
+            <button
+              onClick={() => navigate("/roster")}
+              className="text-blue-600 hover:text-blue-700 flex items-center"
+            >
+              <ChevronLeft size={20} className="mr-1" />
+              Back to Rosters
+            </button>
+
+            {/* Existing roster info */}
+          </div>
+
+          {/* Existing New Game button */}
+          {games.length > 0 ? (
+            <button
+              onClick={handleStartNewGameClick}
+              className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
+            >
+              <PlayCircle size={20} className="mr-2" />
+              Start New Game
+            </button>
+          ) : null}
+        </div>
+        <div className="flex flex-col items-center justify-center mb-6 text-center">
           <div className="flex items-center space-x-2">
             <Users size={32} className="text-blue-600" />
-            <div>
-              <h1 className="text-2xl font-bold text-gray-800">
-                {roster.name}
-              </h1>
-              <p className="text-sm text-gray-500">
-                {roster.players.length} players
-              </p>
-            </div>
+            <h1 className="text-2xl font-bold text-gray-800">{roster.name}</h1>
           </div>
-          <button
-            onClick={handleStartNewGameClick}
-            className="flex items-center px-4 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700 transition-colors"
-          >
-            <PlayCircle size={20} className="mr-2" />
-            Start New Game
-          </button>
+          <p className="text-sm text-gray-500">
+            {roster.players.length} players
+          </p>
         </div>
 
         {error && (
@@ -268,63 +291,66 @@ const GamesList = () => {
             {error}
           </div>
         )}
+        {games.length === 0 ? (
+          <EmptyState onStartGame={handleStartNewGameClick} />
+        ) : (
+          <div className="bg-white rounded-lg shadow">
+            <div className="p-4 border-b border-gray-200">
+              <h2 className="text-lg font-semibold text-gray-800">
+                Game History
+              </h2>
+            </div>
 
-        <div className="bg-white rounded-lg shadow">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
-              Game History
-            </h2>
-          </div>
-
-          <div className="divide-y divide-gray-200">
-            {games.map((game) => (
-              <div
-                key={game.id}
-                className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
-                onClick={() => handleViewGame(game)}
-              >
-                <div className="flex items-center justify-between">
-                  <div className="space-y-1">
-                    <div className="flex items-center space-x-2">
-                      <div className="flex items-center justify-between">
-                        <div className="space-y-2">
-                          <div className="flex items-center space-x-3">
-                            <GameStatus gameState={game.gameState} />
-                            <div className="flex items-center text-sm text-gray-500">
-                              <Calendar size={16} className="mr-1" />
-                              {formatDate(game.startedAt)}
+            <div className="divide-y divide-gray-200">
+              {games.map((game) => (
+                <div
+                  key={game.id}
+                  className="p-4 hover:bg-gray-50 transition-colors cursor-pointer"
+                  onClick={() => handleViewGame(game)}
+                >
+                  <div className="flex items-center justify-between">
+                    <div className="space-y-1">
+                      <div className="flex items-center space-x-2">
+                        <div className="flex items-center justify-between">
+                          <div className="space-y-2">
+                            <div className="flex items-center space-x-3">
+                              <GameStatus gameState={game.gameState} />
+                              <div className="flex items-center text-sm text-gray-500">
+                                <Calendar size={16} className="mr-1" />
+                                {formatDate(game.startedAt)}
+                              </div>
                             </div>
-                          </div>
-                          <div className="flex items-center space-x-4">
-                            {game.gameTime != null && (
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Clock size={16} className="mr-1" />
-                                {Math.floor(game.gameTime / 60)}m{" "}
-                                {game.gameTime % 60}s
-                              </div>
-                            )}
-                            {game.swapHistory?.length > 0 && (
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Activity size={16} className="mr-1" />
-                                {game.swapHistory.length} sections
-                              </div>
-                            )}
-                            {game.roster?.length > 0 && (
-                              <div className="flex items-center text-sm text-gray-500">
-                                <Users size={16} className="mr-1" />
-                                {game.roster.length} players
-                              </div>
-                            )}
+                            <div className="flex items-center space-x-4">
+                              {game.gameTime != null && (
+                                <div className="flex items-center text-sm text-gray-500">
+                                  <Clock size={16} className="mr-1" />
+                                  {Math.floor(game.gameTime / 60)}m{" "}
+                                  {game.gameTime % 60}s
+                                </div>
+                              )}
+                              {game.swapHistory?.length > 0 && (
+                                <div className="flex items-center text-sm text-gray-500">
+                                  <Activity size={16} className="mr-1" />
+                                  {game.swapHistory.length} sections
+                                </div>
+                              )}
+                              {game.roster?.length > 0 && (
+                                <div className="flex items-center text-sm text-gray-500">
+                                  <Users size={16} className="mr-1" />
+                                  {game.roster.length} players
+                                </div>
+                              )}
+                            </div>
                           </div>
                         </div>
                       </div>
                     </div>
                   </div>
                 </div>
-              </div>
-            ))}
+              ))}
+            </div>
           </div>
-        </div>
+        )}
       </div>
       <BetaFeedback />
       <ActiveGamesDialog
