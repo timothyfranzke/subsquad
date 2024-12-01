@@ -320,9 +320,6 @@ const GamesList = () => {
                       </div>
                     </div>
                   </div>
-                  <div className="text-blue-600">
-                    <span className="text-sm">View Details →</span>
-                  </div>
                 </div>
               </div>
             ))}

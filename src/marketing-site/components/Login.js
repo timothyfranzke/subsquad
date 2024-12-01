@@ -28,6 +28,10 @@ const Login = () => {
 
   const navigate = useNavigate();
   const auth = getAuth();
+  console.log(auth.currentUser);
+  if (auth.currentUser) {
+    return <Navigate to="/roster" />;
+  }
 
   const handleInputChange = (e) => {
     const { name, value } = e.target;

@@ -73,6 +73,8 @@ const Header = ({ gameTime, isGameActive, onStartStop, onStartGame, onEndGame, g
         isOpen={showConfirmDialog}
         onClose={() => setShowConfirmDialog(false)}
         onConfirm={handleConfirmEndGame}
+        title={'End Game'}
+        message={'Are you sure you want to end the game?'}
       />
     </>
   );

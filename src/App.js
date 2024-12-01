@@ -15,8 +15,40 @@ import RosterManagement from "./app/screens/RosterManagement";
 import GamesList from "./app/screens/GameList";
 import MarketingPage from "./marketing-site/Marketing";
 import BetaFeedback from "./components/BetaFeedback";
+import AdminDashboard from "./admin/Admin";
+import { useAnalytics } from "./hooks/useAnlyticsHook";
 
 const PrivateRoute = ({ children }) => {
+  const [loading, setLoading] = useState(true);
+  const [user, setUser] = useState(null);
+  const { trackEvent } = useAnalytics();
+
+  useEffect(() => {
+    const unsubscribe = onAuthStateChanged(auth, (user) => {
+      setUser(user);
+      setLoading(false);
+      if (user) {
+        trackEvent('user_authenticated', {
+          user_id: user.uid
+        });
+      }
+    });
+
+    return unsubscribe;
+  }, [trackEvent]);
+
+  if (loading) {
+    return (
+      <div className="min-h-screen flex items-center justify-center">
+        <div className="text-xl font-semibold">Loading...</div>
+      </div>
+    );
+  }
+
+  return user ? children : <Navigate to="/login" />;
+};
+
+const AdminRoute = ({ children }) => {
   const [loading, setLoading] = useState(true);
   const [user, setUser] = useState(null);
 
@@ -37,7 +69,11 @@ const PrivateRoute = ({ children }) => {
     );
   }
 
-  return user ? children : <Navigate to="/login" />;
+  return user && user.email === "timothyfranzke@gmail.com" ? (
+    children
+  ) : (
+    <Navigate to="/login" />
+  );
 };
 
 // Wrapper component for RosterManagement to handle navigation
@@ -57,8 +93,30 @@ const App = () => {
       <Routes>
         <Route path="/" element={<MarketingPage />} />
         <Route path="/login" element={<Login />} />
-        <Route path="/roster" element={<PrivateRoute><RosterManagementWrapper /></PrivateRoute>} />
-        <Route path="/games" element={<PrivateRoute><GamesList /></PrivateRoute>} />
+        <Route
+          path="/roster"
+          element={
+            <PrivateRoute>
+              <RosterManagementWrapper />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/games"
+          element={
+            <PrivateRoute>
+              <GamesList />
+            </PrivateRoute>
+          }
+        />
+        <Route
+          path="/admin"
+          element={
+            <AdminRoute>
+              <AdminDashboard />
+            </AdminRoute>
+          }
+        />
         <Route
           path="/game"
           element={
@@ -70,9 +128,7 @@ const App = () => {
         <Route path="/" element={<Navigate to="/roster" />} />
       </Routes>
     </BrowserRouter>
-    
   );
-
 };
 
 export default App;

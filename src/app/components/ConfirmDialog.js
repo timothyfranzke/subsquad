@@ -31,13 +31,13 @@ const ConfirmDialog = ({ isOpen, onClose, onConfirm, title, message }) => {
               onClick={onClose}
               className="w-full sm:w-auto px-4 py-2 text-gray-700 hover:bg-gray-100 rounded-md"
             >
-              Cancel
+              No
             </button>
             <button
               onClick={onConfirm}
               className="w-full sm:w-auto px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700"
             >
-              End Game
+              Yes
             </button>
           </div>
         </div>
