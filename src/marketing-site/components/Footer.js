@@ -46,37 +46,11 @@ const Footer = () => {
               
               <div className="flex flex-col items-center">
                 <h3 className="text-sm font-semibold text-slate-900">Phone</h3>
-                <a href="tel:+1-555-123-4567" className="mt-2 text-sm text-slate-600 hover:text-blue-600">
-                  (555) 123-4567
+                <a href="tel:+1-913-522-9401" className="mt-2 text-sm text-slate-600 hover:text-blue-600">
+                  (913) 522-9401
                 </a>
               </div>
-              
-              <div className="flex flex-col items-center">
-                <h3 className="text-sm font-semibold text-slate-900">Address</h3>
-                <p className="mt-2 text-sm text-slate-600">
-                  123 Game Street<br />
-                  Sports City, SC 12345
-                </p>
-              </div>
             </div>
-          </div>
-  
-          {/* Copyright and Social Links */}
-          <div className="flex flex-col items-center border-t border-slate-400/10 py-10 sm:flex-row sm:justify-between">
-            <div className="flex gap-x-6">
-              <a href="https://twitter.com/subsquad" className="text-slate-500 hover:text-slate-900">
-                Twitter
-              </a>
-              <a href="https://facebook.com/subsquad" className="text-slate-500 hover:text-slate-900">
-                Facebook
-              </a>
-              <a href="https://instagram.com/subsquad" className="text-slate-500 hover:text-slate-900">
-                Instagram
-              </a>
-            </div>
-            <p className="mt-6 text-sm text-slate-500 sm:mt-0">
-              Copyright © {new Date().getFullYear()} SubSquad. All rights reserved.
-            </p>
           </div>
         </div>
       </footer>

@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">SubSquad</string>
+    <string name="title_activity_main">SubSquad</string>
+    <string name="package_name">com.subsquad.app</string>
+    <string name="custom_url_scheme">com.subsquad.app</string>
+</resources>

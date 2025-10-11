@@ -48,9 +48,9 @@ const PlayerCard = ({
 
   return (
     <div
-      className={`rounded-lg p-2 shadow-md ${getStatusStyle()} ${
+      className={`mobile-card rounded-lg p-3 shadow-md ${getStatusStyle()} ${
         isSelected ? "ring-2 ring-blue-500" : ""
-      } ${!isGameInProgress ? "" : ""}`}
+      } ${!isGameInProgress ? "" : ""} cursor-pointer select-none`}
       onClick={() =>  onSelect(player.id)}
       draggable={isGameInProgress && !onCourt}
       onDragStart={(e) => isGameInProgress && onDragStart(e, player.id)}
